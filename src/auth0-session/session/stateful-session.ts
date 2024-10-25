@@ -50,7 +50,7 @@ export class StatefulSession<
   async getSession(req: Auth0RequestCookies): Promise<SessionPayload<Session> | undefined | null> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     const sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 
@@ -75,7 +75,7 @@ export class StatefulSession<
     const config = await this.getConfig(req);
     const store = await this.getStore(config);
     const { name: sessionName, genId } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     let sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 
@@ -88,6 +88,7 @@ export class StatefulSession<
     }
 
     if (!sessionId) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       sessionId = await genId!(req, session);
       debug('generated new session id %o', sessionId);
     }
@@ -107,7 +108,7 @@ export class StatefulSession<
   ): Promise<void> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     const sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 

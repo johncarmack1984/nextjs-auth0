@@ -8,11 +8,11 @@ export default class Auth0NextResponse extends Auth0Response<NextResponse> {
     super(res);
   }
 
-  public setCookie(name: string, value: string, options?: CookieSerializeOptions) {
+  public setCookie(name: string, value: string, options?: CookieSerializeOptions): void {
     this.res.cookies.set(name, value, options);
   }
 
-  public clearCookie(name: string, options?: CookieSerializeOptions) {
+  public clearCookie(name: string, options?: CookieSerializeOptions): void {
     this.setCookie(name, '', { ...options, expires: new Date(0) });
   }
 
@@ -28,11 +28,11 @@ export default class Auth0NextResponse extends Auth0Response<NextResponse> {
     }
   }
 
-  public setHeader(name: string, value: string) {
+  public setHeader(name: string, value: string): void {
     this.res.headers.set(name, value);
   }
 
-  public send204() {
+  public send204(): void {
     const oldRes = this.res;
     this.res = new NextResponse(null, { status: 204 });
     oldRes.headers.forEach((value, key) => {

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { isRequest } from '../utils/req-helpers';
 
 export type AppRouteHandlerFnContext = {
-  params: Record<string, string | string[]>;
+  params: Promise<Record<string, string | string[]>>;
 };
 
 /**
@@ -68,6 +68,8 @@ export type Handler<Opts = any> = {
     | unknown;
 };
 
+type HandlerReturnType = Promise<Response | unknown> | Response | unknown;
+
 export const getHandler =
   <Opts extends Record<string, any>>(
     appRouteHandler: AppRouteHandlerFn<Opts>,
@@ -77,7 +79,7 @@ export const getHandler =
     reqOrOptions: NextApiRequest | NextRequest | Opts,
     resOrCtx: NextApiResponse | AppRouteHandlerFnContext,
     options?: Opts
-  ) => {
+  ): HandlerReturnType => {
     if (isRequest(reqOrOptions)) {
       return appRouteHandler(reqOrOptions as NextRequest, resOrCtx as AppRouteHandlerFnContext, options);
     }

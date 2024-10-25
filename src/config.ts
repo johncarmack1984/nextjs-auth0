@@ -264,13 +264,16 @@ export const getConfig = (params: ConfigParameters = {}): NextConfig => {
 
 export type GetConfig = (req: Auth0Request | Auth0RequestCookies) => Promise<NextConfig> | NextConfig;
 
-export const configSingletonGetter = (params: ConfigParameters = {}, genId: () => string): GetConfig => {
+export const configSingletonGetter = async (
+  params: ConfigParameters = {},
+  genId: () => string
+): Promise<(req: Auth0Request | Auth0RequestCookies) => Promise<NextConfig>> => {
   let config: NextConfig;
-  return (req) => {
+  return async (req) => {
     if (!config) {
       // Bails out of static rendering for Server Components
       // Need to query cookies because Server Components don't have access to URL
-      req.getCookies();
+      await req.getCookies();
       if ('getUrl' in req) {
         // Bail out of static rendering for API Routes
         // Reading cookies is not always enough https://github.com/vercel/next.js/issues/49006

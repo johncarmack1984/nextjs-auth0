@@ -1,3 +1,4 @@
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { Auth0RequestCookies } from '../auth0-session/http';
 
 export default class Auth0NextRequestCookies extends Auth0RequestCookies {
@@ -5,11 +6,12 @@ export default class Auth0NextRequestCookies extends Auth0RequestCookies {
     super();
   }
 
-  public getCookies(): Record<string, string> {
+  public async getCookies(): Promise<Record<string, string>> {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { cookies } = require('next/headers');
-    const cookieStore = cookies();
-    return cookieStore.getAll().reduce(
+    const { cookies }: { cookies: () => Promise<ReadonlyRequestCookies> } = require('next/headers');
+    const cookieStore: ReadonlyRequestCookies = await cookies();
+    const allCookies = cookieStore.getAll();
+    return allCookies.reduce(
       (memo: Record<string, string>, { name, value }: { name: string; value: string }) => ({
         ...memo,
         [name]: value

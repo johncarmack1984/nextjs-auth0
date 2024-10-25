@@ -120,7 +120,7 @@ export class EdgeClient extends AbstractClient {
     return authorizationUrl.toString();
   }
 
-  async callbackParams(req: Auth0Request, expectedState: string) {
+  async callbackParams(req: Auth0Request, expectedState: string): Promise<URLSearchParams> {
     const [as, client] = await this.getClient();
     const url =
       req.getMethod().toUpperCase() === 'GET' ? new URL(req.getUrl()) : new URLSearchParams(await req.getBody());
@@ -193,7 +193,7 @@ export class EdgeClient extends AbstractClient {
       this.config.idpLogout &&
       (this.config.auth0Logout || (issuerUrl.hostname.match('\\.auth0\\.com$') && this.config.auth0Logout !== false))
     ) {
-      const { id_token_hint, post_logout_redirect_uri, ...extraParams } = parameters;
+      const { /* id_token_hint, */ post_logout_redirect_uri, ...extraParams } = parameters;
       const auth0LogoutUrl: URL = new URL(urlJoin(as.issuer, '/v2/logout'));
       post_logout_redirect_uri && auth0LogoutUrl.searchParams.set('returnTo', post_logout_redirect_uri);
       auth0LogoutUrl.searchParams.set('client_id', this.config.clientID);

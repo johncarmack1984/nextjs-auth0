@@ -1,3 +1,4 @@
+import { ReadonlyRequestCookies, ResponseCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import type { CookieSerializeOptions } from 'cookie';
 import { Auth0ResponseCookies } from '../auth0-session/http';
 
@@ -19,10 +20,14 @@ export default class Auth0NextResponseCookies extends Auth0ResponseCookies {
     super();
   }
 
-  public setCookie(name: string, value: string, options?: CookieSerializeOptions) {
+  public async setCookie(
+    name: string,
+    value: string,
+    options?: CookieSerializeOptions
+  ): Promise<ResponseCookies | void> {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { cookies } = require('next/headers');
-    const cookieSetter = cookies();
+    const { cookies }: { cookies: () => Promise<ReadonlyRequestCookies> } = require('next/headers');
+    const cookieSetter = await cookies();
     try {
       cookieSetter.set({ ...options, name, value });
     } catch (_) {
@@ -30,10 +35,10 @@ export default class Auth0NextResponseCookies extends Auth0ResponseCookies {
     }
   }
 
-  public clearCookie(name: string, options?: CookieSerializeOptions) {
+  public async clearCookie(name: string, options?: CookieSerializeOptions): Promise<ResponseCookies | void> {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { cookies } = require('next/headers');
-    const cookieSetter = cookies();
+    const { cookies }: { cookies: () => Promise<ReadonlyRequestCookies> } = require('next/headers');
+    const cookieSetter = await cookies();
     try {
       cookieSetter.set({ ...options, name, value: '', expires: new Date(0) });
     } catch (_) {

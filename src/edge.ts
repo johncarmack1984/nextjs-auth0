@@ -35,42 +35,50 @@ let instance: Auth0Server;
  *
  * @category Server
  */
-export type InitAuth0 = (params?: ConfigParameters) => Auth0Server;
+export type InitAuth0 = (params?: ConfigParameters) => Promise<Auth0Server>;
 
 // For using managed instance with named exports.
-function getInstance(): Auth0Server {
+async function getInstance(): Promise<Auth0Server> {
   setIsUsingNamedExports();
   if (instance) {
     return instance;
   }
-  instance = _initAuth({ genId, clientGetter });
+  instance = await _initAuth({ genId, clientGetter });
   return instance;
 }
 
 // For creating own instance.
-export const initAuth0: InitAuth0 = (params) => {
+export const initAuth0: InitAuth0 = async (params) => {
   setIsUsingOwnInstance();
-  return _initAuth({ genId, clientGetter, params });
+  return await _initAuth({ genId, clientGetter, params });
 };
 
-export const getSession: GetSession = (...args) => getInstance().getSession(...args);
-export const updateSession: UpdateSession = (...args) => getInstance().updateSession(...args);
-export const getAccessToken: GetAccessToken = (...args) => getInstance().getAccessToken(...args);
-export const touchSession: TouchSession = (...args) => getInstance().touchSession(...args);
+export const getSession: GetSession = async (...args) => (await getInstance()).getSession(...args);
+export const updateSession: UpdateSession = async (...args) => (await getInstance()).updateSession(...args);
+export const getAccessToken: GetAccessToken = async (...args) => (await getInstance()).getAccessToken(...args);
+export const touchSession: TouchSession = async (...args) => (await getInstance()).touchSession(...args);
 export const withApiAuthRequired: WithApiAuthRequired = (...args) =>
+  // @ts-expect-error -- Let's see what happens
   (getInstance().withApiAuthRequired as any)(...args);
 export const withPageAuthRequired: WithPageAuthRequired = ((...args: Parameters<WithPageAuthRequired>) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().withPageAuthRequired(...args)) as WithPageAuthRequired;
 export const handleLogin: HandleLogin = ((...args: Parameters<HandleLogin>) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().handleLogin(...args)) as HandleLogin;
 export const handleLogout: HandleLogout = ((...args: Parameters<HandleLogout>) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().handleLogout(...args)) as HandleLogout;
 export const handleCallback: HandleCallback = ((...args: Parameters<HandleCallback>) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().handleCallback(...args)) as HandleCallback;
 export const handleProfile: HandleProfile = ((...args: Parameters<HandleProfile>) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().handleProfile(...args)) as HandleProfile;
+// @ts-expect-error -- Let's see what happens
 export const handleAuth: HandleAuth = (...args) => getInstance().handleAuth(...args);
 export const withMiddlewareAuthRequired: WithMiddlewareAuthRequired = (...args) =>
+  // @ts-expect-error -- Let's see what happens
   getInstance().withMiddlewareAuthRequired(...args);
 
 export * from './shared';

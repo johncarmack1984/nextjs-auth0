@@ -36,7 +36,7 @@ import { GetClient } from './auth0-session/client/abstract-client';
  */
 export type InitAuth0 = (params?: ConfigParameters) => Auth0Server;
 
-export const _initAuth = ({
+export const _initAuth = async ({
   params,
   genId,
   clientGetter
@@ -44,8 +44,8 @@ export const _initAuth = ({
   params?: ConfigParameters;
   genId: () => string;
   clientGetter: (telemetry: Telemetry) => GetClient;
-}): Auth0Server => {
-  const getConfig = configSingletonGetter(params, genId);
+}): Promise<Auth0Server> => {
+  const getConfig = await configSingletonGetter(params, genId);
   const getClient = clientGetter(telemetry);
 
   // Init base layer (with base config)

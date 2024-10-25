@@ -147,7 +147,7 @@ export class NodeClient extends AbstractClient {
       ) {
         Object.defineProperty(this.client, 'endSessionUrl', {
           value(params: EndSessionParameters) {
-            const { id_token_hint, post_logout_redirect_uri, ...extraParams } = params;
+            const { /* id_token_hint, */ post_logout_redirect_uri, ...extraParams } = params;
             const parsedUrl = new URL(urlJoin(issuer.metadata.issuer, '/v2/logout'));
             parsedUrl.searchParams.set('client_id', config.clientID);
             post_logout_redirect_uri && parsedUrl.searchParams.set('returnTo', post_logout_redirect_uri);
@@ -179,7 +179,7 @@ export class NodeClient extends AbstractClient {
     return client.authorizationUrl(parameters);
   }
 
-  async callbackParams(req: Auth0Request) {
+  async callbackParams(req: Auth0Request): Promise<URLSearchParams> {
     const client = await this.getClient();
     const obj: CallbackParamsType = client.callbackParams({
       method: req.getMethod(),

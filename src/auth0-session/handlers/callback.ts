@@ -93,6 +93,7 @@ export default function callbackHandlerFactory(
       throw err;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const openidState: { returnTo?: string } = decodeState(expectedState as string)!;
     let session = await sessionCache.fromTokenEndpointResponse(req, res, tokenResponse);
 

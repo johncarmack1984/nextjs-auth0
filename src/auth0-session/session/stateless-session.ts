@@ -71,7 +71,7 @@ export class StatelessSession<
   async getSession(req: Auth0RequestCookies): Promise<SessionPayload<Session> | undefined | null> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     let existingSessionValue: string | undefined;
     if (sessionName in cookies) {
       // get JWE from un-chunked session cookie
@@ -120,7 +120,7 @@ export class StatelessSession<
   ): Promise<void> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
 
     debug('found session, creating signed session cookie(s) with name %o(.i)', sessionName);
     const [key] = await this.getKeys(config);
@@ -158,7 +158,7 @@ export class StatelessSession<
   ): Promise<void> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
 
     for (const cookieName of Object.keys(cookies)) {
       if (cookieName.match(`^${sessionName}(?:\\.\\d)?$`)) {

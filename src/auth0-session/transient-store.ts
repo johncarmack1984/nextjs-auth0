@@ -84,7 +84,7 @@ export default class TransientStore {
    * @return {String|undefined} Cookie value or undefined if cookie was not found.
    */
   async read(key: string, req: Auth0Request, res: Auth0Response): Promise<string | undefined> {
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const cookie = cookies[key];
     const config = await this.getConfig(req);
     const cookieConfig = config.transactionCookie;

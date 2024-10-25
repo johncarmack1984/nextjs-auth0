@@ -8,6 +8,6 @@ export const isRequest = (req: Req): boolean => {
   return req instanceof Request || req.headers instanceof Headers || typeof (req as Request).bodyUsed === 'boolean';
 };
 
-export const isNextApiRequest = (req: Req) => {
+export const isNextApiRequest = (req: Req): boolean => {
   return !isRequest(req) && 'query' in req;
 };

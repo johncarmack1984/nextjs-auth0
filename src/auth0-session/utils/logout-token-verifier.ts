@@ -24,6 +24,7 @@ export default function getLogoutTokenVerifier(): VerifyLogoutToken {
     let keyInput: Uint8Array | GetKeyFn;
     if (config.idTokenSigningAlg === 'RS256') {
       if (!remoteJwkSet) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         remoteJwkSet = createRemoteJWKSet(new URL(issuerMetadata.jwks_uri!));
       }
       keyInput = remoteJwkSet;

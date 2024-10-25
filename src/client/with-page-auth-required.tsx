@@ -66,7 +66,7 @@ export interface UserProps {
  *
  * @category Client
  */
-export type WithPageAuthRequired = <P extends {}>(
+export type WithPageAuthRequired = <P extends Record<string, unknown>>(
   Component: ComponentType<P & UserProps>,
   options?: WithPageAuthRequiredOptions
 ) => React.FC<P>;

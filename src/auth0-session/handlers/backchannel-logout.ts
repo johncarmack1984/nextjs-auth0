@@ -10,6 +10,7 @@ const getStore = (config: Config) => {
     session: { store },
     backchannelLogout
   } = config;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return typeof backchannelLogout === 'boolean' ? store! : backchannelLogout.store;
 };
 

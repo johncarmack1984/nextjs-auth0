@@ -67,7 +67,8 @@ export function fromTokenEndpointResponse(tokenEndpointResponse: TokenEndpointRe
     delete claims[claim];
   });
 
-  const { id_token, access_token, scope, expires_in, expires_at, refresh_token, ...remainder } = tokenEndpointResponse;
+  const { id_token, access_token, scope, expires_in, /* expires_at, */ refresh_token, ...remainder } =
+    tokenEndpointResponse;
   const storeIDToken = config.session.storeIDToken;
 
   return Object.assign(
